@@ -1,91 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Snake Game 2 Player</title>
-  <style>
-    body { text-align: center; background: #111; color: white; }
-    canvas { background: black; margin-top: 20px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two Player Snake</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <main class="app">
+    <section class="scoreboard" aria-label="Player scores">
+      <div class="score-card player-one">
+        <span class="label">Player 1</span>
+        <span class="value" id="score1">0</span>
+        <span class="hint">W A S D</span>
+      </div>
+      <div class="title-group">
+        <h1>Two Player Snake</h1>
+        <p>First crash loses. Head-to-head collision ends in a draw.</p>
+      </div>
+      <div class="score-card player-two">
+        <span class="label">Player 2</span>
+        <span class="value" id="score2">0</span>
+        <span class="hint">Arrow Keys</span>
+      </div>
+    </section>
 
-<h1>🐍 2 Kishilik Snake</h1>
-<p>Player1: WASD | Player2: Arrow Keys</p>
+    <section class="game-shell">
+      <canvas
+        id="gameCanvas"
+        width="600"
+        height="600"
+        aria-label="Snake game board"
+        role="img"
+      ></canvas>
 
-<canvas id="game" width="400" height="400"></canvas>
+      <div class="overlay hidden" id="gameOverlay" aria-live="polite">
+        <div class="overlay-card">
+          <h2 id="gameResult">Game Over</h2>
+          <p id="gameSummary">Press restart to play again.</p>
+          <button id="restartButton" type="button">Restart</button>
+        </div>
+      </div>
+    </section>
+  </main>
 
-<script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-let grid = 20;
-
-let snake1 = [{x: 40, y: 40}];
-let snake2 = [{x: 200, y: 200}];
-
-let dx1 = grid, dy1 = 0;
-let dx2 = -grid, dy2 = 0;
-
-let food = {x: 100, y: 100};
-
-document.addEventListener("keydown", e => {
-  // Player 1
-  if(e.key === "w") { dx1=0; dy1=-grid; }
-  if(e.key === "s") { dx1=0; dy1=grid; }
-  if(e.key === "a") { dx1=-grid; dy1=0; }
-  if(e.key === "d") { dx1=grid; dy1=0; }
-
-  // Player 2
-  if(e.key === "ArrowUp") { dx2=0; dy2=-grid; }
-  if(e.key === "ArrowDown") { dx2=0; dy2=grid; }
-  if(e.key === "ArrowLeft") { dx2=-grid; dy2=0; }
-  if(e.key === "ArrowRight") { dx2=grid; dy2=0; }
-});
-
-function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  moveSnake(snake1, dx1, dy1);
-  moveSnake(snake2, dx2, dy2);
-
-  drawSnake(snake1, "lime");
-  drawSnake(snake2, "red");
-
-  ctx.fillStyle = "yellow";
-  ctx.fillRect(food.x, food.y, grid, grid);
-
-  checkFood(snake1);
-  checkFood(snake2);
-}
-
-function moveSnake(snake, dx, dy) {
-  let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-
-  // devorga urilsa
-  if(head.x < 0 || head.y < 0 || head.x >= 400 || head.y >= 400){
-    alert("Game Over!");
-    location.reload();
-  }
-
-  snake.unshift(head);
-  snake.pop();
-}
-
-function drawSnake(snake, color) {
-  ctx.fillStyle = color;
-  snake.forEach(p => ctx.fillRect(p.x, p.y, grid, grid));
-}
-
-function checkFood(snake){
-  if(snake[0].x === food.x && snake[0].y === food.y){
-    snake.push({...snake[snake.length-1]});
-    food.x = Math.floor(Math.random()*20)*grid;
-    food.y = Math.floor(Math.random()*20)*grid;
-  }
-}
-
-setInterval(gameLoop, 120);
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
